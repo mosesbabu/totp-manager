@@ -15,7 +15,7 @@ interface TOTPCode {
   groupId?: string;
 }
 
-export default function AddCodePage() {
+export default function GenerateCodePage() {
   const [codes, setCodes] = useState<TOTPCode[]>([]);
   const [groups, setGroups] = useState<Group[]>([{ id: "1", name: "Default Group" }]);
 

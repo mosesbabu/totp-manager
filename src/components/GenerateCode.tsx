@@ -53,12 +53,42 @@ export default function GenerateCode({ groups, onCodeGenerated }: GenerateCodePr
     const newCode: TOTPCode = {
       username,
       notes,
-      secretKey: generatedKey, // Use auto-generated key
-      groupId: selectedGroup || undefined, // Allow no group
+      secretKey: generatedKey,
+      groupId: selectedGroup || undefined,
     };
 
-    // Call the parent function to handle the OTP
-    onCodeGenerated(newCode);
+    try {
+  
+      const response = await fetch("/api/codes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...newCode,
+          expiresAt: new Date(Date.now() + 30 * 60 * 1000), // Set expiration to 30 minutes from now
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save the code");
+      }
+
+      const savedCode = await response.json();
+      console.log("Code saved successfully:", savedCode);
+
+      // Call the parent function to handle the OTP
+      onCodeGenerated(newCode);
+
+      // Reset form fields
+      setUsername("");
+      setNotes("");
+      setSelectedGroup("");
+      generateSecretKey(); // Generate a new key for the next code
+    } catch (error) {
+      console.error("Error saving the code:", error);
+      alert("Failed to save the code. Please try again.");
+    }
   };
 
   return (

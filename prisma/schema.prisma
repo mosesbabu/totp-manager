@@ -7,29 +7,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        String   @id @default(uuid())
-  clerkId   String   @unique // Clerk user ID
-  email     String   @unique
-  groups    Group[]
-}
+
 
 model Group {
-  id        String   @id @default(uuid())
+  id        String     @id @default(uuid())
   name      String
   ownerId   String
-  owner     User     @relation(fields: [ownerId], references: [clerkId])
   codes     TOTPCode[]
-  shareable String   @unique @default(uuid()) // Shareable link for non-authenticated users
+  shareable String     @unique @default(uuid()) // Shareable link for non-authenticated users
 }
 
 model TOTPCode {
-  id         String   @id @default(uuid())
-  username   String
-  notes      String?
-  secretKey  String
-  createdAt  DateTime @default(now())
-  expiresAt  DateTime @default(date_add(now(), interval 30 day))
-  groupId    String?
-  group      Group?   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  id        String   @id @default(uuid())
+  username  String
+  notes     String?
+  secretKey String
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  groupId   String?
+  group     Group?   @relation(fields: [groupId], references: [id], onDelete: Cascade)
 }

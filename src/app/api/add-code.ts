@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ error: "Username and Secret Key are required" });
   }
 
-  const newCode = await prisma.tOTPCode.create({
+  const newCode = await prisma.code.create({
     data: { username, notes, secretKey, groupId },
   });
 

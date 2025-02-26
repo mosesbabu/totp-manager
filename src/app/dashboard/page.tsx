@@ -20,7 +20,7 @@ export default function Dashboard() {
   const [groups, setGroups] = useState<Group[]>([]);
 
   useEffect(() => {
-    // Preload with a default group (if needed)
+    
     setGroups([{ id: "1", name: "Default Group" }]);
   }, []);
 
@@ -28,12 +28,12 @@ export default function Dashboard() {
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
 
-      {/* Button to navigate to Add Code page */}
+     
       <Link href="/generate-code">
         <button className="bg-blue-500 text-white px-4 py-2 rounded mb-4">Add Code</button>
       </Link>
 
-      {/* Display Groups */}
+      
       <h2 className="text-xl font-semibold mt-4">Groups</h2>
       {groups.length === 0 ? (
         <p>No groups available. Add codes to create groups.</p>

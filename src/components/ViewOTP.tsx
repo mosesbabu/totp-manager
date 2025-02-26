@@ -8,7 +8,7 @@ interface Group {
 
 interface TOTPCode {
   username: string;
-  notes: string;
+  notes?: string;
   secretKey: string;
   groupId?: string;
 }

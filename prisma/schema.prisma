@@ -8,26 +8,28 @@ datasource db {
 }
 
 model User {
-  id    String @id @default(uuid())
-  email String @unique
+  id        String   @id @default(uuid())
+  clerkId   String   @unique // Clerk user ID
+  email     String   @unique
+  groups    Group[]
 }
 
-model CodeGroup {
-  id          String @id @default(uuid())
-  name        String
-  userId      String
-  user        User   @relation(fields: [userId], references: [id])
-  codes       Code[]
-  shareId     String @unique @default(uuid())
+model Group {
+  id        String   @id @default(uuid())
+  name      String
+  ownerId   String
+  owner     User     @relation(fields: [ownerId], references: [clerkId])
+  codes     TOTPCode[]
+  shareable String   @unique @default(uuid()) // Shareable link for non-authenticated users
 }
 
-model Code {
-  id        String @id @default(uuid())
-  account   String
-  secretKey String
-  notes     String?
-  userId    String
-  groupId   String?
-  user      User   @relation(fields: [userId], references: [id])
-  group     CodeGroup? @relation(fields: [groupId], references: [id])
+model TOTPCode {
+  id         String   @id @default(uuid())
+  username   String
+  notes      String?
+  secretKey  String
+  createdAt  DateTime @default(now())
+  expiresAt  DateTime @default(date_add(now(), interval 30 day))
+  groupId    String?
+  group      Group?   @relation(fields: [groupId], references: [id], onDelete: Cascade)
 }
